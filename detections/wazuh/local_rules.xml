@@ -1,3 +1,24 @@
+<group name="local,syslog,sshd,">
+
+  <!--
+  Dec 10 01:02:02 host sshd[1234]: Failed none for root from 1.1.1.1 port 1066 ssh2
+  -->
+  <rule id="100001" level="5">
+    <if_sid>5716</if_sid>
+    <srcip>1.1.1.1</srcip>
+    <description>sshd: authentication failed from IP 1.1.1.1.</description>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
+  </rule>
+
+</group>
+<group name="local,suricata,recon,">
+  <rule id="100300" level="10">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature">LAB Possible Nmap SYN scan</field>
+    <description>Suricata: port scan detected from $(src_ip)</description>
+    <mitre><id>T1046</id></mitre>
+  </rule>
+</group>
 <group name="local,modsecurity,web,">
 
   <rule id="100200" level="3">
