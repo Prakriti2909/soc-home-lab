@@ -1,0 +1,44 @@
+<group name="local,modsecurity,web,">
+
+  <rule id="100200" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="transaction.producer.modsecurity" type="pcre2">ModSecurity</field>
+    <description>ModSecurity WAF event</description>
+  </rule>
+
+  <rule id="100201" level="8">
+    <if_sid>100200</if_sid>
+    <field name="transaction.response.http_code">^403$</field>
+    <description>WAF blocked a web attack from $(transaction.client_ip)</description>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+  <rule id="100202" level="10">
+    <if_sid>100201</if_sid>
+    <match>REQUEST-913-SCANNER-DETECTION</match>
+    <description>WAF: scanner tool detected from $(transaction.client_ip)</description>
+    <mitre><id>T1595.002</id></mitre>
+  </rule>
+
+  <rule id="100203" level="12">
+    <if_sid>100201</if_sid>
+    <match>REQUEST-942-APPLICATION-ATTACK-SQLI</match>
+    <description>WAF: SQL injection attempt from $(transaction.client_ip)</description>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+  <rule id="100204" level="10">
+    <if_sid>100201</if_sid>
+    <match>REQUEST-941-APPLICATION-ATTACK-XSS</match>
+    <description>WAF: XSS attempt from $(transaction.client_ip)</description>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+  <rule id="100205" level="10">
+    <if_sid>100201</if_sid>
+    <match>REQUEST-930-APPLICATION-ATTACK-LFI</match>
+    <description>WAF: path traversal / LFI attempt from $(transaction.client_ip)</description>
+    <mitre><id>T1190</id></mitre>
+  </rule>
+
+</group>
